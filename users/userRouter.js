@@ -52,8 +52,16 @@ router.get("/users/", (req, res) => {
     });
 });
 
-router.get("/users/:id", (req, res) => {
-  // do your magic!
+router.get("/users/:id", validateUserId, (req, res) => {
+  const { id } = req.params
+
+  db.getById(id)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(error => {
+      res.status(500).json({ error: `Could not retrieve user at id ${id}. Good-bye.`})
+    })
 });
 
 router.get("/users/:id/posts", (req, res) => {
