@@ -5,7 +5,15 @@ const router = express.Router();
 router.use(express.json())
 
 router.post("/users", (req, res) => {
-  // do your magic!
+  const body = req.body;
+
+  db.insert(body)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(error => {
+      res.status(500).json({ error: "Could not create user. Good-bye."})
+    })
 });
 
 router.post("/users/:id/posts", (req, res) => {
