@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("./userDb");
 
 const router = express.Router();
+router.use(express.json())
 
 router.post("/", (req, res) => {
   // do your magic!
