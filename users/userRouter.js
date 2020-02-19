@@ -22,21 +22,34 @@ router.post("/users/:id/posts", (req, res) => {
   const body = req.body;
   const userId = body.user_id;
 
-  if(userId && userId === id){
-    postDb.insert(body)
+  if (userId && userId === id) {
+    postDb
+      .insert(body)
       .then(post => {
-        res.status(200).json(post)
+        res.status(200).json(post);
       })
       .catch(error => {
-        res.status(500).json({ error: `User ${id} could not be updated. Good-bye.` })
-      })
+        res
+          .status(500)
+          .json({ error: `User ${id} could not be updated. Good-bye.` });
+      });
   } else {
-    res.status(400).json({ error: `Missing user_id field or user_id does not match expected user ${id}.` })
+    res
+      .status(400)
+      .json({
+        error: `Missing user_id field or user_id does not match expected user ${id}.`
+      });
   }
 });
 
 router.get("/users/", (req, res) => {
-  // do your magic!
+  db.get()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json({ error: "Could not retrieve users. Good-bye." });
+    });
 });
 
 router.get("/users/:id", (req, res) => {
