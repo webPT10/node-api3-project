@@ -64,8 +64,16 @@ router.get("/users/:id", validateUserId, (req, res) => {
     })
 });
 
-router.get("/users/:id/posts", (req, res) => {
-  // do your magic!
+router.get("/users/:id/posts", validateUserId, (req, res) => {
+  const { id } = req.params;
+  
+  db.getUserPosts(id)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(error => {
+      res.status(500).json({ error: `Unable to retrieve posts for user ${id}.` })
+    })
 });
 
 router.delete("/users/:id", (req, res) => {
