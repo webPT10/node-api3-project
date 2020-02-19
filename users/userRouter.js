@@ -17,7 +17,7 @@ router.post("/users", validateUser, (req, res) => {
     });
 });
 
-router.post("/users/:id/posts", (req, res) => {
+router.post("/users/:id/posts", validateUserId, validatePost, (req, res) => {
   const { id } = req.params;
   const body = req.body;
   const userId = body.user_id;
