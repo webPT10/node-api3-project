@@ -34,14 +34,13 @@ router.post("/users/:id/posts", validateUserId, validatePost, (req, res) => {
           .json({ error: `User ${id} could not be updated. Good-bye.` });
       });
   } else {
-    res
-      .status(400)
-      .json({
-        error: `Missing user_id field or user_id does not match expected user ${id}.`
-      });
+    res.status(400).json({
+      error: `Missing user_id field or user_id does not match expected user ${id}.`
+    });
   }
 });
 
+// tested +
 router.get("/users/", (req, res) => {
   db.get()
     .then(users => {
@@ -53,35 +52,56 @@ router.get("/users/", (req, res) => {
 });
 
 router.get("/users/:id", validateUserId, (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
 
   db.getById(id)
     .then(user => {
-      res.status(200).json(user)
+      res.status(200).json(user);
     })
     .catch(error => {
-      res.status(500).json({ error: `Could not retrieve user at id ${id}. Good-bye.`})
-    })
+      res
+        .status(500)
+        .json({ error: `Could not retrieve user at id ${id}. Good-bye.` });
+    });
 });
 
 router.get("/users/:id/posts", validateUserId, (req, res) => {
   const { id } = req.params;
-  
+
   db.getUserPosts(id)
     .then(posts => {
-      res.status(200).json(posts)
+      res.status(200).json(posts);
     })
     .catch(error => {
-      res.status(500).json({ error: `Unable to retrieve posts for user ${id}.` })
+      res
+        .status(500)
+        .json({ error: `Unable to retrieve posts for user ${id}.` });
+    });
+});
+
+// NOT FINISHED!
+router.delete("/users/:id", validateUserId, (req, res) => {
+  const { id } = req.params;
+
+  db.remove(id)
+    .then(user => {
+      if (user === 1) {
+        res.status(200).json(user);
+      } else res.status(400).json({ error: "Nothing deleted." });
     })
+    .catch(error => {
+      res.status(500).json({ error: `Could not delete user ${id}` });
+    });
 });
 
-router.delete("/users/:id", (req, res) => {
-  // do your magic!
-});
+// NOT FINISHED!
+router.put("/users/:id", validateUserId, (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
 
-router.put("/users/:id", (req, res) => {
-  // do your magic!
+  db.update(id, changes)
+    .then()
+    .catch();
 });
 
 //custom middleware
@@ -96,6 +116,7 @@ function validateUserId(req, res, next) {
     .catch(error => {
       res.status(400).json({ message: "Invalid user id." });
     });
+  next();
 }
 
 function validateUser(req, res, next) {

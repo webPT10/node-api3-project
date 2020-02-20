@@ -1,13 +1,13 @@
 const express = require("express");
 const server = express();
-const morgan = require("morgan");
+// const morgan = require("morgan");
 
 // custom middleware
 const logger = require("./middleware/logger");
 
 // imported __Router
 const userRouter = require("./users/userRouter");
-const postRouter = require("./posts/postRouter");
+// const postRouter = require("./posts/postRouter");
 
 server.use(express.json());
 server.use(logger("short")); // this is a Higher Order Function
