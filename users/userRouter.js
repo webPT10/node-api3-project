@@ -79,7 +79,6 @@ router.get("/users/:id/posts", validateUserId, (req, res) => {
     });
 });
 
-// NOT FINISHED!
 router.delete("/users/:id", validateUserId, (req, res) => {
   const { id } = req.params;
 
@@ -100,8 +99,21 @@ router.put("/users/:id", validateUserId, (req, res) => {
   const changes = req.body;
 
   db.update(id, changes)
-    .then()
-    .catch();
+    .then(updated => {
+      if(updated === 1){
+        db.getById(id)
+          .then(user => {
+            res.status(200).json(user)
+          })
+          .catch(error => {
+            res.status(500).json({ error: "Server error." })
+          })
+      } else 
+          res.status(400).json({ error: "Nothing updated." })
+    })
+    .catch(error => {
+      res.status(500).json({ error: `Unable to updated user ${id}.` })
+    });
 });
 
 //custom middleware
